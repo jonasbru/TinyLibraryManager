@@ -15,26 +15,47 @@ function searchBookG(field) {
 
                 line += '<td><form action="/add" method="post">';
                 line += '<input type="hidden" name="title" value="' + val.volumeInfo.title + '" >';
+
                 if (val.volumeInfo.description) {
                     line += '<input type="hidden" name="description" value="' + val.volumeInfo.description.replace(/\\/g, "\\\\") + '" >';
+                } else {
+                    line += '<input type="hidden" name="description" value="" >';
                 }
+
                 if (val.volumeInfo.authors) {
                     line += '<input type="hidden" name="authors" value="' + val.volumeInfo.authors + '" >';
+                }  else {
+                    line += '<input type="hidden" name="authors" value="" >';
                 }
+
                 if (val.volumeInfo.publisher) {
                     line += '<input type="hidden" name="publisher" value="' + val.volumeInfo.publisher + '" >';
+                }  else {
+                    line += '<input type="hidden" name="publisher" value="" >';
                 }
+
                 if (val.volumeInfo.publisherDate) {
                     line += '<input type="hidden" name="publisherDate" value="' + val.volumeInfo.publisherDate + '" >';
+                }  else {
+                    line += '<input type="hidden" name="publisherDate" value="" >';
                 }
+
                 if (val.volumeInfo.industryIdentifiers) {
                     line += '<input type="hidden" name="ISBN" value="' + val.volumeInfo.industryIdentifiers.ISBN_13 + '" >';
+                }  else {
+                    line += '<input type="hidden" name="ISBN" value="" >';
                 }
+
                 if (val.volumeInfo.imageLinks) {
                     line += '<input type="hidden" name="thumbnail" value="' + val.volumeInfo.imageLinks.thumbnail + '" >';
+                } else {
+                    line += '<input type="hidden" name="thumbnail" value="" >';
                 }
+
                 if (val.volumeInfo.accessInfo) {
                     line += '<input type="hidden" name="webReaderLink" value="' + val.accessInfo.webReaderLink + '" >';
+                }  else {
+                    line += '<input type="hidden" name="webReaderLink" value="" >';
                 }
                 line += '<input type="submit" value="Add" class="btn btn-primary">';
                 line += '</form></td>';
