@@ -26,7 +26,7 @@
                     <input type="submit" value="Borrow" class="btn btn-primary">
                 </form>
             {% else %}
-                <small>Log in to borrow it</small>
+                <small><a href="{{ url_for("login") }}">Log in</a> to borrow it</small>
             {% endif %}
         {% endif %}
         {% if session.logged_in %}
