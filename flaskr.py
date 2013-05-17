@@ -78,6 +78,13 @@ def add_book():
     return render_template("modify_book.html", book={}, action="add")
 
 
+@app.route("/addG", methods=["GET"])
+def add_book_G():
+    if not session.get("logged_in"):
+        abort(401)
+    return render_template("add_google.html", book={}, action="add")
+
+
 @app.route("/add", methods=["POST"])
 def add_book_post():
     if not session.get("logged_in"):

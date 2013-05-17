@@ -54,7 +54,7 @@
 
     {% if book.description %}
         <blockquote>
-            <p>{{ book.description }}</p>
+            <p>{{ book.description|safe}}</p>
         </blockquote>
     {% endif %}
 
