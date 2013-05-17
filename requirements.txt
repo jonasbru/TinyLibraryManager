@@ -1,5 +1,4 @@
 Flask==0.9
-GnuPGInterface==0.3.2
 Jinja2==2.6
 Mako==0.7.1
 MarkupSafe==0.15
