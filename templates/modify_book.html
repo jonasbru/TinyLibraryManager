@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+{% if action == "modify" %}
+    <form action="{{ url_for('modify', post_id=book.id) }}" method="post" class="add-book form-horizontal">
+{% else %}
+    <form action="{{ url_for('add_book_post') }}" method="post" class="add-book form-horizontal">
+{% endif %}
+<input type="hidden" name="action" value="{{ action }}">
+
+<div class="control-group">
+    <label class="control-label" for="title">Title</label>
+
+    <div class="controls">
+        {% if book.title %}
+            <input type="text" name="title" id="title" value="{{ book.title }}">
+        {% else %}
+            <input type="text" name="title" id="title" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="Description">Description</label>
+
+    <div class="controls">
+        {% if book.description %}
+            <textarea id="description" name="description" rows="5">{{ book.description }}</textarea>
+        {% else %}
+            <textarea id="description" name="description" rows="5"></textarea>
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="authors">Authors</label>
+
+    <div class="controls">
+        {% if book.authors %}
+            <input type="text" name="authors" id="authors" value="{{ book.authors }}">
+        {% else %}
+            <input type="text" name="authors" id="authors" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="publisher">Publisher</label>
+
+    <div class="controls">
+        {% if book.publisher %}
+            <input type="text" name="publisher" id="publisher" value="{{ book.publisher }}">
+        {% else %}
+            <input type="text" name="publisher" id="publisher" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="publisherDate">Publish date</label>
+
+    <div class="controls">
+        {% if book.publisherDate %}
+            <input type="text" name="publisherDate" id="publisherDate" value="{{ book.publisherDate }}">
+        {% else %}
+            <input type="text" name="publisherDate" id="publisherDate" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="ISBN">ISBN</label>
+
+    <div class="controls">
+        {% if book.ISBN %}
+            <input type="text" name="ISBN" id="ISBN" value="{{ book.ISBN }}">
+        {% else %}
+            <input type="text" name="ISBN" id="ISBN" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="thumbnail">Thumbnail</label>
+
+    <div class="controls">
+        {% if book.thumbnail %}
+            <input type="text" name="thumbnail" id="thumbnail" value="{{ book.thumbnail }}">
+        {% else %}
+            <input type="text" name="thumbnail" id="thumbnail" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <label class="control-label" for="webReaderLink">Web reader link</label>
+
+    <div class="controls">
+        {% if book.webReaderLink %}
+            <input type="text" name="webReaderLink" id="webReaderLink" value="{{ book.webReaderLink }}">
+        {% else %}
+            <input type="text" name="webReaderLink" id="webReaderLink" >
+        {% endif %}
+    </div>
+</div>
+
+<div class="control-group">
+    <div class="controls">
+        {% if action == "modify" %}
+            <dd><input type="submit" value="Modify" class="btn btn-primary">
+                {% else %}
+            <dd><input type="submit" value="Add" class="btn btn-primary">
+        {% endif %}
+    </div>
+</div>
+
+{#<dl>#}
+{#    <dt>Title:</dt>#}
+{#    {% if book.title %}#}
+{#        <dd><input type="text" name="title" value="{{ book.title }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" name="title"></dd>#}
+{#    {% endif %}#}
+{#    <dt>Description:</dt>#}
+{#    {% if book.description %}#}
+{#        <dd><textarea name="description" rows="5" cols="40">{{ book.description }}</textarea></dd>#}
+{#    {% else %}#}
+{#        <dd><textarea name="description" rows="5" cols="40"></textarea></dd>#}
+{#    {% endif %}#}
+{#    <dt>Authors:</dt>#}
+{#    {% if book.authors %}#}
+{#        <dd><input type="text" size="30" name="authors" value="{{ book.authors }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="authors"></dd>#}
+{#    {% endif %}#}
+{#    <dt>publisher:</dt>#}
+{#    {% if book.publisher %}#}
+{#        <dd><input type="text" size="30" name="publisher" value="{{ book.publisher }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="publisher"></dd>#}
+{#    {% endif %}#}
+{#    <dt>publisherDate:</dt>#}
+{#    {% if book.publisherDate %}#}
+{#        <dd><input type="text" size="30" name="publisherDate" value="{{ book.publisherDate }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="publisherDate"></dd>#}
+{#    {% endif %}#}
+{#    <dt>ISBN:</dt>#}
+{#    {% if book.ISBN %}#}
+{#        <dd><input type="text" size="30" name="ISBN" value="{{ book.ISBN }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="ISBN"></dd>#}
+{#    {% endif %}#}
+{#    <dt>thumbnail:</dt>#}
+{#    {% if book.thumbnail %}#}
+{#        <dd><input type="text" size="30" name="thumbnail" value="{{ book.thumbnail }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="thumbnail"></dd>#}
+{#    {% endif %}#}
+{#    <dt>webReaderLink:</dt>#}
+{#    {% if book.webReaderLink %}#}
+{#        <dd><input type="text" size="30" name="webReaderLink" value="{{ book.webReaderLink }}"></dd>#}
+{#    {% else %}#}
+{#        <dd><input type="text" size="30" name="webReaderLink"></dd>#}
+{#    {% endif %}#}
+{#    {% if action == "modify" %}#}
+{#        <dd><a href="{{ url_for('detail', post_id=book.id) }}">Cancel</a></dd>#}
+{#    {% else %}#}
+{#        <dd><a href="{{ url_for('show_entries') }}">Cancel</a></dd>#}
+{#    {% endif %}#}
+{#    {% if action == "modify" %}#}
+{#        <dd><input type="submit" value="Modify">#}
+{#            {% else %}#}
+{#        <dd><input type="submit" value="Add">#}
+{#    {% endif %}#}
+{#</dl>#}
+</form>
+{% endblock %}

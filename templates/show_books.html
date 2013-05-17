@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if session.logged_in %}
+        <div class="btn-group pull-right">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                Add book
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ url_for('add_book') }}">From scratch</a></li>
+                <li><a href="#">Google books API</a></li>
+                <li><a href="#">ISBN file</a></li>
+            </ul>
+        </div>
+
+        {% if borrowedBooks %}
+            <h2>My borrowed books</h2>
+            <table class="table table-bordered">
+                {% for borrowedBook in borrowedBooks %}
+                    <tr>
+                        <td>{{ borrowedBook.title }}
+                            <form action="{{ url_for('return_post', post_id=borrowedBook.id) }}" method="post">
+                                <input type="hidden" name="title" value="{{ borrowedBook.title }}">
+                                <input class="btn btn-primary pull-right" type="submit" value="Return">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    {% endif %}
+
+    <h2>Books</h2>
+    <div class="filter-books">
+        <div class="btn-group filter-books inline">
+            <button class="btn">All</button>
+            <button class="btn">Free</button>
+            <button class="btn">Borrowed</button>
+        </div>
+        <div class="input-prepend filter-books inline">
+            <span class="add-on"><i class="icon-search"></i></span>
+            <input class="span2" id="prependedInput" type="text" placeholder="filter">
+        </div>
+    </div>
+    <table class="table table-bordered table-books">
+        {% for book in books %}
+            <tr {% if book.borrower %}class="error"{% endif %}
+                onclick="location.href='{{ url_for('detail', post_id=book.id) }}'">
+                <td>
+                    {{ book.title }}
+                    {% if book.borrowerGr %}
+                        <div class="pull-right">
+                            <em>{{ book.borrower }}</em>
+                            <img src="{{ book.borrowerGr ~ "&s=25" }}" alt="img" height="25" width="25" class="img-rounded"/>
+                        </div>
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% else %}
+            <em>Unbelievable. No books here so far!</em>
+        {% endfor %}
+    </table>
+    {#    <ul class="books">#}
+    {#        {% for book in books %}#}
+    {#            <li {% if book.borrower %}class="borrowed"{% endif %}>#}
+    {#                <h2><a href="{{ url_for('detail', post_id=book.id) }}">{{ book.title }}</a></h2>#}
+    {#                {% if book.borrowerGr %}#}
+    {#                    <img src="{{ book.borrowerGr ~ "&s=25" }}" alt="img" height="25" width="25"/>#}
+    {#                {% endif %}#}
+    {#            </li>#}
+    {#        {% else %}#}
+    {#            <li><em>Unbelievable. No books here so far!</em></li>#}
+    {#        {% endfor %}#}
+    {#    </ul>#}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Login</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form class="form-horizontal" action="{{ url_for('login') }}" method="post">
+        <div class="control-group">
+            <label class="control-label" for="username">Name</label>
+            <div class="controls">
+                <input type="text" id="username" name="username">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="mail">Mail (optional)</label>
+            <div class="controls">
+                <input type="text" id="mail" placeholder="Better if gravatar mail" name="mail">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

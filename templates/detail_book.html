@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+
+    <div class="pull-right borrow-book-info">
+        {% if book.borrower %}
+            <p class="text-error"><b>Borrowed by
+                {% if session.logged_in and book.borrower == session.username %}
+                    you!
+                {% else %}
+                    {{ book.borrower }} <img src="{{ book.borrowerGr ~ "&s=25" }}" alt="img" height="25" width="25" class="img-rounded"/>
+                {% endif %}
+            </b></p>
+
+            {% if session.logged_in and book.borrower == session.username %}
+                <form action="{{ url_for('return_post', post_id=book.id) }}" method="post">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <input type="submit" value="Return" class="btn btn-primary">
+                </form>
+            {% endif %}
+        {% else %}
+            <p class="text-success"><b>Available!</b></p>
+            {% if session.logged_in %}
+                <form action="{{ url_for('borrow_post', post_id=book.id) }}" method="post">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <input type="submit" value="Borrow" class="btn btn-primary">
+                </form>
+            {% else %}
+                <small>Log in to borrow it</small>
+            {% endif %}
+        {% endif %}
+        {% if session.logged_in %}
+        <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-cog"></i>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="{{ url_for('modify', post_id=book.id) }}">Edit book</a></li>
+                <li><a href="#">Delete book</a></li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <h2>{{ book.title }}</h2>
+    {% if book.authors %}
+        <p class="book-author">{{ book.authors }}</p>
+    {% endif %}
+
+    {% if book.thumbnail %}
+        <img src="{{ book.thumbnail }}" alt="img" height="100" width="80" class="pull-right"/>
+    {% endif %}
+
+    {% if book.description %}
+        <blockquote>
+            <p>{{ book.description }}</p>
+        </blockquote>
+    {% endif %}
+
+    <dl class="dl-horizontal">
+        {% if book.publisher %}
+            <dt>Publisher</dt>
+            <dd>{{ book.publisher }}</dd>
+        {% endif %}
+        {% if book.publisherDate %}
+            <dt>Publish date:</dt>
+            <dd>{{ book.publisherDate }}</dd>
+        {% endif %}
+        {% if book.ISBN %}
+            <dt>ISBN</dt>
+            <dd>{{ book.ISBN }}</dd>
+        {% endif %}
+        {% if book.webReaderLink %}
+            <dt>Web reader link:</dt>
+            <dd><a href="{{ book.webReaderLink }}">Read it online!</a></dd>
+        {% endif %}
+    </dl>
+{% endblock %}
