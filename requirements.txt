@@ -7,3 +7,4 @@ lxml==2.3.5
 oauth==1.0.1
 simplejson==2.6.1
 qrcode
+six
