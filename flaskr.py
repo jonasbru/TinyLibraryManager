@@ -3,17 +3,28 @@
 Flaskr
 ~~~~~~
 
-A microblog example application written as Flask tutorial with
-Flask and sqlite3.
+A tiny library management system
+with Flask and sqlite3.
 
-:copyright: (c) 2010 by Armin Ronacher.
-:license: BSD, see LICENSE for more details.
+:copyright: (c) 2013 by Jonas Bru.
 """
+
 from __future__ import with_statement
 from sqlite3 import dbapi2 as sqlite3
-import urllib, hashlib
+import urllib
+import hashlib
+from qrcode import *
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash, _app_ctx_stack
+from reportlab.graphics.barcode import code39, code128, code93
+from reportlab.graphics.barcode import eanbc, qr, usps
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+from reportlab.graphics import renderPDF
+import cStringIO
+from flask import make_response
 
 # configuration
 DATABASE = "flaskr.db"
@@ -39,8 +50,8 @@ def init_db():
 
 def get_db():
     """Opens a new database connection if there is none yet for the
-current application context.
-"""
+    current application context.
+    """
     top = _app_ctx_stack.top
     if not hasattr(top, "sqlite_db"):
         sqlite_db = sqlite3.connect(app.config["DATABASE"])
@@ -115,6 +126,7 @@ def login():
         if request.form["username"] == "":
             error = "Empty username"
         else:
+            session.permanent = True
             session["logged_in"] = True
             session["username"] = request.form["username"]
             session["mail"] = request.form["mail"]
@@ -206,9 +218,9 @@ def return_post(post_id):
 
     print(bor)
 
-    if bor[0] is None or bor[0] == "" or bor[0] != session.get("username"):
-        book = db.execute("select * from books where id=?", str(post_id)).fetchone()
-        return render_template("detail_book.html", book=book, error="It's not you that borrowed that book!")
+    # if bor[0] is None or bor[0] == "" or bor[0] != session.get("username"):
+    #     book = db.execute("select * from books where id=?", str(post_id)).fetchone()
+    #     return render_template("detail_book.html", book=book, error="It's not you that borrowed that book!")
 
     db.execute("update books set borrower=?, borrowerGr=? where id=?", ["", "", post_id])
     db.execute("insert into borrowings (borrower, borrowerGr, date, action) values (?, ?, date('now'), \"return\")", [session["username"], session["gravatar"]])
@@ -218,6 +230,90 @@ def return_post(post_id):
     flash("The book " + request.form["title"] + " was successfully returned!")
 
     return redirect(url_for("show_entries"))
+
+
+@app.route("/QR")
+def QR():
+    # qr = QRCode(version=20, error_correction=ERROR_CORRECT_L)
+    # qr.add_data("http://blog.matael.org/")
+    # qr.make() # Generate the QRCode itself
+    #
+    # # im contains a PIL.Image.Image object
+    # im = qr.make_image()
+    #
+    # # To save it
+    # im.save("./filename.png")
+    #
+    # img = make("http://127.0.0.1:5000/detail/1")
+    # img.save("/home/jbrumonserrat/workspace/flaskr/plop.png")
+
+    # c = canvas.Canvas("barcodes.pdf", pagesize=letter)
+    #
+    # # draw a QR code
+    # qr_code = qr.QrCodeWidget('www.mousevspython.com')
+    # bounds = qr_code.getBounds()
+    # width = bounds[2] - bounds[0]
+    # height = bounds[3] - bounds[1]
+    # taille = 100.
+    # d = Drawing(taille, taille, transform=[taille/width,0,0,taille/height,0,0])
+    # d.add(qr_code)
+    #
+    # for x in xrange(0,3):
+    #     for y in xrange(0,6):
+    #         renderPDF.draw(d, c, 35 + x*200, 45 + y*120)
+    #         c.drawString(35 + x*200, 35 + y*120,"Welcome to Reportlab!")
+    #
+    # c.save()
+    #
+    # return redirect(url_for("show_entries"))
+
+
+    output = cStringIO.StringIO()
+
+    c = canvas.Canvas(output)
+    # c = canvas.Canvas("barcodes.pdf", pagesize=letter)
+
+    # draw a QR code
+    qr_code = qr.QrCodeWidget('www.mousevspython.com')
+    bounds = qr_code.getBounds()
+    width = bounds[2] - bounds[0]
+    height = bounds[3] - bounds[1]
+    taille = 100.
+    d = Drawing(taille, taille, transform=[taille/width,0,0,taille/height,0,0])
+    d.add(qr_code)
+
+    for x in xrange(0,3):
+        for y in xrange(0,6):
+            renderPDF.draw(d, c, 35 + x*200, 45 + y*120)
+            c.drawString(35 + x*200, 35 + y*120,"Welcome to Reportlab!")
+
+    c.save()
+    pdf_out = output.getvalue()
+    output.close()
+
+    response = make_response(pdf_out)
+    response.headers['Content-Disposition'] = "attachment; filename='books_to_print.pdf"
+    response.mimetype = 'application/pdf'
+
+    return response
+
+@app.route("/qr/<int:post_id>", methods=["GET"])
+@app.route("/QR/<int:post_id>", methods=["GET"])
+def QR_get(post_id):
+    db = get_db()
+    cur = db.execute("select * from books where id=?", str(post_id))
+    book = cur.fetchone()
+
+    return render_template("qr_book.html", book=book)
+
+@app.route("/qrM/<title>", methods=["GET"])
+@app.route("/QRM/<title>", methods=["GET"])
+def QR_get_title(title):
+    db = get_db()
+    cur = db.execute("select * from books where title=?", [title])
+    book = cur.fetchone()
+
+    return render_template("qr_book.html", book=book)
 
 
 if __name__ == "__main__":
