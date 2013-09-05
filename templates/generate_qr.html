@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Generate a QR file</h2>
+    <form action="{{ url_for('QR') }}" method="post" class="add-book form-horizontal">
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Generate</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            {% for book in books %}
+                <tr>
+                    <td style="text-align: center;">
+                        <input type="checkbox" name="{{ book.id }}" value="true">
+                    </td>
+                    <td>
+                        {{ book.title }}
+                    </td>
+                </tr>
+            {% else %}
+                <em>Unbelievable. No books here so far!</em>
+            {% endfor %}
+        </table>
+
+        <input type="submit" value="Generate" class="btn btn-primary">
+    </form>
+{% endblock %}
