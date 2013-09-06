@@ -263,85 +263,42 @@ def QR_generate():
 @app.route("/QR_gen", methods=["POST"])
 def QR():
     print request.form
-    # qr = QRCode(version=20, error_correction=ERROR_CORRECT_L)
-    # qr.add_data("http://blog.matael.org/")
-    # qr.make() # Generate the QRCode itself
-    #
-    # # im contains a PIL.Image.Image object
-    # im = qr.make_image()
-    #
-    # # To save it
-    # im.save("./filename.png")
-    #
-    # img = make("http://127.0.0.1:5000/detail/1")
-    # img.save("/home/jbrumonserrat/workspace/flaskr/plop.png")
-
-    # c = canvas.Canvas("barcodes.pdf", pagesize=letter)
-    #
-    # # draw a QR code
-    # qr_code = qr.QrCodeWidget('www.mousevspython.com')
-    # bounds = qr_code.getBounds()
-    # width = bounds[2] - bounds[0]
-    # height = bounds[3] - bounds[1]
-    # taille = 100.
-    # d = Drawing(taille, taille, transform=[taille/width,0,0,taille/height,0,0])
-    # d.add(qr_code)
-    #
-    # for x in xrange(0,3):
-    #     for y in xrange(0,6):
-    #         renderPDF.draw(d, c, 35 + x*200, 45 + y*120)
-    #         c.drawString(35 + x*200, 35 + y*120,"Welcome to Reportlab!")
-    #
-    # c.save()
-    #
-    # return redirect(url_for("show_entries"))
 
     output = cStringIO.StringIO()
-
     c = canvas.Canvas(output)
-    # c = canvas.Canvas("barcodes.pdf", pagesize=letter)
 
-    # draw a QR code
+    inputRows = int(request.form["inputRows"])
+    inputColumns = int(request.form["inputColumns"])
+    qrSize = float(request.form["qrSize"])
+    columnSeparation = int(request.form["columnSeparation"])
+    rowSeparation = int(request.form["rowSeparation"])
+    leftOffset = int(request.form["leftOffset"])
+    bottomOffset = int(request.form["bottomOffset"])
 
     x = 0
     y = 0
     for bookId in request.form:
-        print bookId
-        db = get_db()
-        cur = db.execute("select * from books where id=?", [bookId])
-        book = cur.fetchone()
+        # print bookId
+        if bookId.isdigit():
+            db = get_db()
+            cur = db.execute("select * from books where id=?", [bookId])
+            book = cur.fetchone()
 
-        url = url_for('QR_get_title', title=book[1], _external=True)
+            url = url_for('QR_get_title', title=book[1], _external=True)
 
-        qr_code = qr.QrCodeWidget(url)
-        bounds = qr_code.getBounds()
-        width = bounds[2] - bounds[0]
-        height = bounds[3] - bounds[1]
-        size = 100.
-        d = Drawing(size, size, transform=[size / width, 0, 0, size / height, 0, 0])
-        d.add(qr_code)
-        renderPDF.draw(d, c, 35 + x * 200, 45 + y * 120)
-        c.drawString(35 + x * 200, 35 + y * 120, book[1])
+            qr_code = qr.QrCodeWidget(url)
+            bounds = qr_code.getBounds()
+            width = bounds[2] - bounds[0]
+            height = bounds[3] - bounds[1]
+            size = qrSize
+            d = Drawing(size, size, transform=[size / width, 0, 0, size / height, 0, 0])
+            d.add(qr_code)
+            renderPDF.draw(d, c, leftOffset + x * columnSeparation, bottomOffset + 5 + y * rowSeparation)
+            c.drawString(leftOffset + x * columnSeparation, bottomOffset + y * rowSeparation, book[1])
 
-        x = (x + 1) % 3
-        if x == 0 :
-            y = (y + 1) % 6
-
-    # for y in xrange(0,6):
-    #     for x in xrange(0,3):
-    #         db = get_db()
-    #         cur = db.execute("select * from books where id=?", [title])
-    #         book = cur.fetchone()
-    #
-    #         qr_code = qr.QrCodeWidget('www.mousevspython.com')
-    #         bounds = qr_code.getBounds()
-    #         width = bounds[2] - bounds[0]
-    #         height = bounds[3] - bounds[1]
-    #         taille = 100.
-    #         d = Drawing(taille, taille, transform=[taille/width,0,0,taille/height,0,0])
-    #         d.add(qr_code)
-    #         renderPDF.draw(d, c, 35 + x*200, 45 + y*120)
-    #         c.drawString(35 + x*200, 35 + y*120,"Welcome to Reportlab!")
+            x = (x + 1) % inputColumns
+            if x == 0:
+                y = (y + 1) % inputRows
 
     c.save()
     pdf_out = output.getvalue()

@@ -96,8 +96,10 @@ function filterTitle() {
     } else {
         $(".table-books tr").show();
     }
+}
 
-//    $(".table-books tr not(td:contains(\"" + text + "\"))").hide();
-//    $('.table-books tr:not(.error)').hide();
+
+function showConfigQR() {
+    $("#QRConfig").collapse('toggle');
 }
 
