@@ -33,13 +33,13 @@
     <h2>Books</h2>
     <div class="filter-books">
         <div class="btn-group filter-books inline">
-            <button class="btn">All</button>
-            <button class="btn">Free</button>
-            <button class="btn">Borrowed</button>
+            <button class="btn" onclick="filterAll()">All</button>
+            <button class="btn" onclick="filterAvailable()">Free</button>
+            <button class="btn" onclick="filterBorrowed()">Borrowed</button>
         </div>
         <div class="input-prepend filter-books inline">
             <span class="add-on"><i class="icon-search"></i></span>
-            <input class="span2" id="prependedInput" type="text" placeholder="filter">
+            <input class="span2" id="prependedInput" type="text" placeholder="filter" onkeyup="filterTitle()">
         </div>
     </div>
     <table class="table table-bordered table-books">

@@ -1,9 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
     <h2>Generate a QR file</h2>
+
+    <div class="btn-group filter-books inline">
+        <button class="btn" onclick="selectAll()">All</button>
+        <button class="btn"  onclick="selectNone()">None</button>
+    </div>
+
     <form action="{{ url_for('QR') }}" method="post" class="add-book form-horizontal">
-
-
         <table class="table table-bordered">
             <thead>
                 <tr>

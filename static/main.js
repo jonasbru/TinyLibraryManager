@@ -24,25 +24,25 @@ function searchBookG(field) {
 
                 if (val.volumeInfo.authors) {
                     line += '<input type="hidden" name="authors" value="' + val.volumeInfo.authors + '" >';
-                }  else {
+                } else {
                     line += '<input type="hidden" name="authors" value="" >';
                 }
 
                 if (val.volumeInfo.publisher) {
                     line += '<input type="hidden" name="publisher" value="' + val.volumeInfo.publisher + '" >';
-                }  else {
+                } else {
                     line += '<input type="hidden" name="publisher" value="" >';
                 }
 
                 if (val.volumeInfo.publisherDate) {
                     line += '<input type="hidden" name="publisherDate" value="' + val.volumeInfo.publisherDate + '" >';
-                }  else {
+                } else {
                     line += '<input type="hidden" name="publisherDate" value="" >';
                 }
 
                 if (val.volumeInfo.industryIdentifiers) {
                     line += '<input type="hidden" name="ISBN" value="' + val.volumeInfo.industryIdentifiers.ISBN_13 + '" >';
-                }  else {
+                } else {
                     line += '<input type="hidden" name="ISBN" value="" >';
                 }
 
@@ -54,7 +54,7 @@ function searchBookG(field) {
 
                 if (val.volumeInfo.accessInfo) {
                     line += '<input type="hidden" name="webReaderLink" value="' + val.accessInfo.webReaderLink + '" >';
-                }  else {
+                } else {
                     line += '<input type="hidden" name="webReaderLink" value="" >';
                 }
                 line += '<input type="submit" value="Add" class="btn btn-primary">';
@@ -68,3 +68,36 @@ function searchBookG(field) {
         console.log(data)
     });
 }
+
+
+function selectAll() {
+    $('table input[type=checkbox]').prop('checked', true);
+}
+function selectNone() {
+    $('table input[type=checkbox]').prop('checked', false);
+}
+
+function filterAll() {
+    $('.table-books tr').show();
+}
+function filterAvailable() {
+    $('.table-books tr:not(.error)').show();
+    $('.table-books tr.error').hide();
+}
+function filterBorrowed() {
+    $('.table-books tr.error').show();
+    $('.table-books tr:not(.error)').hide();
+}
+function filterTitle() {
+    var text = $('#prependedInput').val();
+    if (text != "") {
+        $(".table-books tr").hide();
+        $(".table-books tr:contains(\"" + text + "\")").show();
+    } else {
+        $(".table-books tr").show();
+    }
+
+//    $(".table-books tr not(td:contains(\"" + text + "\"))").hide();
+//    $('.table-books tr:not(.error)').hide();
+}
+
