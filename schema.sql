@@ -20,5 +20,6 @@ create table IF NOT EXISTS borrowings (
   borrower string not null,
   borrowerGr string not null,
   date string not null,
+  title string not null,
   action string not null
 );

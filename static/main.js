@@ -103,3 +103,4 @@ function showConfigQR() {
     $("#QRConfig").collapse('toggle');
 }
 
+var easter_egg = new Konami('http://nyan.cat');

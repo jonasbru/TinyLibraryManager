@@ -157,7 +157,13 @@ def detail(post_id, error=""):
     db = get_db()
     cur = db.execute("select * from books where id=?", str(post_id))
     book = cur.fetchone()
-    return render_template("detail_book.html", book=book, error=error)
+
+    cur = db.execute("select * from borrowings where title=? order by date, id desc", [book[1]])
+    borrows = cur.fetchall()
+
+    print borrows
+
+    return render_template("detail_book.html", book=book, error=error, borrows=borrows)
 
 
 @app.route("/modify/<int:post_id>", methods=["GET"])
@@ -190,15 +196,15 @@ def borrow_post(post_id):
         abort(401)
 
     db = get_db()
-    cur = db.execute("select borrower from books where id=?", [post_id])
+    cur = db.execute("select * from books where id=?", [post_id])
     bor = cur.fetchone()
 
-    if not (bor[0] is None or bor[0] == ""):
+    if not (bor[9] is None or bor[9] == ""):
         book = db.execute("select * from books where id=?", str(post_id)).fetchone()
         return render_template("detail_book.html", book=book, error="Book already borrowed!")
 
     db.execute("update books set borrower=?, borrowerGr=? where id=?", [session["username"], session["gravatar"], post_id])
-    db.execute("insert into borrowings (borrower, borrowerGr, date, action) values (?, ?, date('now'), \"borrow\")", [session["username"], session["gravatar"]])
+    db.execute("insert into borrowings (title, borrower, borrowerGr, date, action) values (?, ?, ?, date('now'), \"borrow\")", [bor[1], session["username"], session["gravatar"]])
 
     db.commit()
 
@@ -213,17 +219,15 @@ def return_post(post_id):
         abort(401)
 
     db = get_db()
-    cur = db.execute("select borrower from books where id=?", [post_id])
+    cur = db.execute("select * from books where id=?", [post_id])
     bor = cur.fetchone()
-
-    print(bor)
 
     # if bor[0] is None or bor[0] == "" or bor[0] != session.get("username"):
     #     book = db.execute("select * from books where id=?", str(post_id)).fetchone()
     #     return render_template("detail_book.html", book=book, error="It's not you that borrowed that book!")
 
     db.execute("update books set borrower=?, borrowerGr=? where id=?", ["", "", post_id])
-    db.execute("insert into borrowings (borrower, borrowerGr, date, action) values (?, ?, date('now'), \"return\")", [session["username"], session["gravatar"]])
+    db.execute("insert into borrowings (title, borrower, borrowerGr, date, action) values (?, ?, ?, date('now'), \"return\")", [bor[1], session["username"], session["gravatar"]])
 
     db.commit()
 

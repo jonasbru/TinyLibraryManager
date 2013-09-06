@@ -119,16 +119,16 @@ form input, form textarea {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
-table td em{
+table td em {
     font-size: 20px;
     margin-right: 3px;
     color: rgba(78, 78, 78, 0.62);
 }
 
-.table td{
+.table td {
     font-size: 25px;
     padding: 4px 8px;
     height: 25px;
@@ -140,9 +140,8 @@ table form {
 }
 
 .table-books tr {
-    cursor:pointer;
+    cursor: pointer;
 }
-
 
 /* ==========================================================================
    Detail book
@@ -161,22 +160,32 @@ table form {
     margin: 20px 0px;
 }
 
-.borrow-book-info > *{
+.borrow-book-info > * {
     display: inline;
 }
 
+.table-borrows td, .table-borrows th {
+    font-size: 15px;
+    text-align: center;
+}
+
+.table-borrows tr.borrow td {
+    background-color: #F2DEDE;
+}
+
+.table-borrows tr.return td {
+    background-color: #d3f2ca;
+}
 
 /* ==========================================================================
    Add / Modify book
    ========================================================================== */
 
-
-
 /* ==========================================================================
    Add Google book
    ========================================================================== */
 
-.table-resultsG td{
+.table-resultsG td {
     font-size: 15px;
     padding: 4px 8px;
 }

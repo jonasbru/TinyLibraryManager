@@ -2,6 +2,7 @@
 {% block body %}
     {% if session.logged_in %}
         <div class="btn-group pull-right">
+            <a class="btn" href="{{ url_for('QR_generate') }}">Generate QR file</a>
             <button class="btn dropdown-toggle" data-toggle="dropdown">
                 Add book
                 <span class="caret"></span>
@@ -9,7 +10,6 @@
             <ul class="dropdown-menu">
                 <li><a href="{{ url_for('add_book') }}">From scratch</a></li>
                 <li><a href="{{ url_for('add_book_G') }}">Google books API</a></li>
-                <li><a href="{{ url_for('QR_generate') }}">Generate QR file</a></li>
             </ul>
         </div>
 

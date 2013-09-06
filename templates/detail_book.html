@@ -76,4 +76,30 @@
             <dd><a href="{{ book.webReaderLink }}">Read it online!</a></dd>
         {% endif %}
     </dl>
+
+    <div>
+        <h2>History</h2>
+        {% if borrows %}
+            <table class="table table-bordered table-borrows">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>User</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tabResults">
+            {% for borrow in borrows %}
+                <tr class="{{ borrow.action }}">
+                    <td>{{ borrow.date }}</td>
+                    <td>{{ borrow.borrower }} <img src="{{ borrow.borrowerGr ~ "&s=25" }}" alt="img" height="25" width="25" class="img-rounded"/></td>
+                    <td>{{ borrow.action }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% else %}
+            <em>No one read this book yet. Sad book is sad :'(</em>
+        {% endif %}
+    </table>
+    </div>
 {% endblock %}
