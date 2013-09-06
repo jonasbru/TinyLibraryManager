@@ -103,4 +103,4 @@ function showConfigQR() {
     $("#QRConfig").collapse('toggle');
 }
 
-var easter_egg = new Konami('http://nyan.cat');
+var easter_egg = new Konami('http://jonasbru.github.io/TinyShipIt/');
