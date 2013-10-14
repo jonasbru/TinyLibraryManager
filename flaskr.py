@@ -155,7 +155,7 @@ def logout():
 @app.route("/detail/<int:post_id>")
 def detail(post_id, error=""):
     db = get_db()
-    cur = db.execute("select * from books where id=?", str(post_id))
+    cur = db.execute("select * from books where id=?", [str(post_id)])
     book = cur.fetchone()
 
     cur = db.execute("select * from borrowings where title=? order by date, id desc", [book[1]])
@@ -171,7 +171,7 @@ def modify(post_id):
     if not session.get("logged_in"):
         abort(401)
     db = get_db()
-    cur = db.execute("select * from books where id=?", str(post_id))
+    cur = db.execute("select * from books where id=?", [str(post_id)])
     book = cur.fetchone()
     return render_template("modify_book.html", book=book, action="modify")
 
@@ -200,7 +200,7 @@ def borrow_post(post_id):
     bor = cur.fetchone()
 
     if not (bor[9] is None or bor[9] == ""):
-        book = db.execute("select * from books where id=?", str(post_id)).fetchone()
+        book = db.execute("select * from books where id=?", [str(post_id)]).fetchone()
         return render_template("detail_book.html", book=book, error="Book already borrowed!")
 
     db.execute("update books set borrower=?, borrowerGr=? where id=?", [session["username"], session["gravatar"], post_id])
@@ -241,7 +241,7 @@ def return_post(post_id):
 @app.route("/QR/<int:post_id>", methods=["GET"])
 def QR_get(post_id):
     db = get_db()
-    cur = db.execute("select * from books where id=?", str(post_id))
+    cur = db.execute("select * from books where id=?", [str(post_id)])
     book = cur.fetchone()
 
     return render_template("qr_book.html", book=book)
